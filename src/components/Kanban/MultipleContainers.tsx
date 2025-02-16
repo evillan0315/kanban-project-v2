@@ -391,15 +391,11 @@ export function MultipleContainers({
                 active.rect.current.translated &&
                 active.rect.current.translated.top >
                   over.rect.top + over.rect.height;
-
               const modifier = isBelowOverItem ? 1 : 0;
-
               newIndex =
                 overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
             }
-
             recentlyMovedToNewContainer.current = true;
-
             const currentActiveItem = findTaskById(active.id as string);
             const currentItem = findTaskById(over?.id as string);
             const newTskStat = {
@@ -505,7 +501,6 @@ export function MultipleContainers({
         style={{
           display: "inline-grid",
           boxSizing: "border-box",
-          padding: 20,
           gridAutoFlow: vertical ? "row" : "column",
         }}
       >
@@ -678,8 +673,7 @@ function Trash({ id }: { id: UniqueIdentifier }) {
       style={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
-        position: "fixed",
+        justifyContent: "space-between",
         left: "50%",
         marginLeft: -150,
         bottom: 20,

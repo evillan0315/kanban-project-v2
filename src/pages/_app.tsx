@@ -124,7 +124,7 @@ const AUTHENTICATION = {
 };
 
 function getDefaultLayout(page: React.ReactElement<any>) {
-  return <DashboardLayout defaultSidebarCollapsed><PageContainer>{page}</PageContainer></DashboardLayout>;
+  return <DashboardLayout defaultSidebarCollapsed><PageContainer maxWidth={false} sx={{}}>{page}</PageContainer></DashboardLayout>;
 }
 
 function RequireAuth({ children }: { children: React.ReactNode }) {

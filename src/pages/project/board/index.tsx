@@ -1,16 +1,16 @@
 'use client'
 import React  from "react";
-import Kanban from "@/components/Kanban";
-import Container from "@mui/material/Container";
+
+import Box from "@mui/material/Box";
 
 
 export default function Dashboard() {
   return (
-    <Container maxWidth="xl" sx={{ py: 4, mt: 6 }}>
+    <Box sx={{ }}>
       
-        <Kanban />
+   
      
-    </Container>
+    </Box>
   );
 }
 Dashboard.requireAuth = true;

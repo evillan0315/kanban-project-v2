@@ -70,7 +70,7 @@ export default function SignIn({
 }
 
 SignIn.getLayout = (page: React.ReactNode) => page;
-SignIn.requireAuth =false;
+SignIn.requireAuth = false;
 
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {

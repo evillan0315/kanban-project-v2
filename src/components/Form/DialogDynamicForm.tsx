@@ -49,7 +49,7 @@ console.log(selectedStatus, 'selectedStatus');
           "& .MuiPaper-root": {
             display: "flex",
             flexDirection: "column",
-            background: "#000009",
+            background: "#0000009",
             height: "100vh",
           },
         }}

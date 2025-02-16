@@ -163,3 +163,9 @@ model Color {
   Priority  Priority[]
   Status    Status[]
 }
+
+model Documentation {
+  id      String  @id @default(uuid())
+  name    String
+  content String?
+}

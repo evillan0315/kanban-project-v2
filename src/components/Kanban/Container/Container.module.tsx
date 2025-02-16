@@ -22,7 +22,6 @@ export const StyledContainer = styled(Box)(({ theme }) => ({
     gridGap: '10px',
     gridTemplateColumns: 'repeat(var(--columns, 1), 1fr)', // Use CSS variable
     listStyle: 'none',
-    padding: '20px',
     margin: 0,
   },
 
@@ -38,7 +37,7 @@ export const StyledContainer = styled(Box)(({ theme }) => ({
     backgroundColor: 'transparent',
     borderStyle: 'dashed',
     borderColor: 'rgba(0, 0, 0, 0.08)', // Or use theme divider with lower opacity
-
+    position: 'absolute',
     '&:hover': {
       borderColor: 'rgba(0, 0, 0, 0.15)', // Or use theme divider with higher opacity
     },
@@ -50,7 +49,6 @@ export const StyledContainer = styled(Box)(({ theme }) => ({
 
   '&.unstyled': {
     overflow: 'visible',
-    backgroundColor: 'transparent !important',
     border: 'none !important',
   },
 
@@ -74,13 +72,11 @@ export const StyledContainer = styled(Box)(({ theme }) => ({
 
 export const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
-  padding: '5px 20px',
-  paddingRight: '8px',
   alignItems: 'center',
   justifyContent: 'space-between',
-  backgroundColor: theme.palette.background.paper,
   borderTopLeftRadius: '5px',
   borderTopRightRadius: '5px',
+  paddingLeft: '15px',
   borderBottom: `1px solid ${theme.palette.divider}`,
 
   '&:hover .Actions > *': {

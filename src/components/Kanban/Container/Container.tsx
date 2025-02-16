@@ -3,13 +3,18 @@ import React, { forwardRef } from "react";
 import classNames from "classnames";
 import Box from "@mui/material/Box";
 
-
-import { StyledContainer, Header } from "./Container.module";
+import { Header, StyledContainer } from "./Container.module";
 import { Add, Delete, DragHandle } from "@mui/icons-material";
 
-import { Button, CardActions, IconButton } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import { useTaskData } from "@/hooks/useTaskData";
-
 
 export interface Props {
   children: React.ReactNode;
@@ -47,33 +52,25 @@ export const Container = forwardRef<HTMLDivElement, Props>(
     }: Props,
     ref
   ) => {
-    const {findStatusById} = useTaskData()
+    const { findStatusById } = useTaskData();
     const handleCreateItem = () => {
-      console.log("handle create item")
-    }
+      console.log("handle create item");
+    };
 
-    
-    
     return (
       <Box
         {...props}
         component={onClick ? "button" : "div"}
         ref={ref}
         sx={{
-
           gridAutoRows: "max-content",
-
           boxSizing: "border-box",
           appearance: "none",
           outline: "none",
           minWidth: 350,
-          marginX: "10px",
-          borderRadius: "5px",
-          minHeight: 350,
-          transition: "background-color 350ms ease",
-          backgroundColor: "plain.main",
-          border: `1px solid #333`,
+          minHeight: 450,
           fontSize: ".9rem",
+
         }}
         style={
           {
@@ -93,25 +90,47 @@ export const Container = forwardRef<HTMLDivElement, Props>(
         onClick={onClick}
         tabIndex={onClick ? 0 : undefined}
       >
-        {label ? (
-          <Header>
-            {findStatusById(label)?.name}
-            <CardActions>
-              <IconButton size={"small"} color="error" onClick={onRemove}>
-                <Delete />
-              </IconButton>
+        <Card variant="outlined" sx={{
+                      margin:1,
+          height: "100%",
+          "& .MuiPaper-root": {
+            display: "flex",
+            flexDirection: "column",
 
-              <Box {...handleProps}>
-                {" "}
-                <IconButton size={"small"}>
-                  <DragHandle />
-                </IconButton>
-              </Box>
-            </CardActions>
-          </Header>
-        ) : null}
-        {placeholder ? children : <ul>{children}</ul>}
-        <Button startIcon={<Add />} onClick={handleCreateItem}>Create Item</Button>
+            height: "90vh",
+          },
+        }}>
+          {label ? (
+            <>
+              <Header>
+                <Typography variant="h6" color="primary">
+                  {findStatusById(label)?.name || "Header"}
+                </Typography>
+                <CardActions>
+                  <IconButton size={"small"} color="error" onClick={onRemove}>
+                    <Delete />
+                  </IconButton>
+
+                  <Box {...handleProps}>
+                    {" "}
+                    <IconButton size={"small"}>
+                      <DragHandle />
+                    </IconButton>
+                  </Box>
+                </CardActions>
+              </Header>
+            </>
+          ) : null}
+
+          <CardContent sx={{p:1, flex: 1, height: "50vh", maxHeight: 440, overflow:"auto"}}>
+            {placeholder ? children : <ul>{children}</ul>}
+          </CardContent>
+          <CardActions sx={{ p: 1 }}>
+          <Button fullWidth startIcon={<Add />} onClick={handleCreateItem}>
+            Create Item
+          </Button>
+          </CardActions>
+        </Card>
       </Box>
     );
   }

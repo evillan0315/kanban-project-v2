@@ -1,14 +1,14 @@
 import React from "react";
 
-import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
 import {MultipleContainers} from "@/components/Kanban/MultipleContainers";
 
 export default function Home() {
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4, mt: 6 }}>
+    <Box sx={{ }}>
       <MultipleContainers  trashable/>
-    </Container>
+    </Box>
   );
 }
 Home.requireAuth = true;
