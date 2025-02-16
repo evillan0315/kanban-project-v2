@@ -1,0 +1,19 @@
+[
+  {
+    "name": "Public",
+    "description": "Users who have not logged in and have limited access to public resources."
+  },
+  {
+    "name": "Authenticated",
+    "description": "Users who have logged in and have access to standard features of the platform."
+  },
+  {
+    "name": "Administrator",
+    "description": "Users with elevated permissions to manage platform settings, users, and content."
+  },
+  {
+    "name": "Super",
+    "description": "Top-level administrators with unrestricted access to all system functionalities."
+  }
+]
+

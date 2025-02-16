@@ -1,0 +1,58 @@
+[
+  {
+
+    "title": "Main module",
+    "description": "Design the main module.",
+    "status": "Work In Progress",
+    "priority": "Urgent",
+    "tags": "Design",
+    "startDate": "2023-01-10T00:00:00Z",
+    "dueDate": "2023-04-10T00:00:00Z",
+"projectId": "ae276207-a8fa-445e-9546-5a3839721e39"
+  },
+  {
+
+    "title": "Navigation algorithm",
+    "description": "Implement the navigation algorithm.",
+    "status": "To Do",
+    "priority": "High",
+    "tags": "Coding",
+    "startDate": "2023-01-15T00:00:00Z",
+    "dueDate": "2023-05-15T00:00:00Z",
+ "projectId": "9ac16bd4-1926-4de2-8b69-780ce6df073b"
+  },
+  {
+
+    "title": "Energy solutions",
+    "description": "Develop renewable energy solutions.",
+    "status": "Work In Progress",
+    "priority": "Urgent",
+    "tags": "Development",
+    "startDate": "2023-03-20T00:00:00Z",
+    "dueDate": "2023-09-20T00:00:00Z",
+    "projectId": "ae276207-a8fa-445e-9546-5a3839721e39"
+  },
+  {
+
+    "title": "Development workflows",
+    "description": "Outline new software development workflows.",
+    "status": "To Do",
+    "priority": "High",
+    "tags": "Planning",
+    "startDate": "2023-01-25T00:00:00Z",
+    "dueDate": "2023-06-25T00:00:00Z",
+ "projectId": "ae276207-a8fa-445e-9546-5a3839721e39"
+  },
+  {
+
+    "title": "Research AI models",
+    "description": "Research AI models for prediction.",
+    "status": "Work In Progress",
+    "priority": "Urgent",
+    "tags": "Research",
+    "startDate": "2023-04-20T00:00:00Z",
+    "dueDate": "2023-10-20T00:00:00Z",
+"projectId": "459976c2-0a48-4da4-869e-1c34ba7ea9b8"
+  }
+]
+
