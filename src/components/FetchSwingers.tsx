@@ -1,11 +1,15 @@
 'client'
 
+import { useLoading } from "@/hooks/useLoading";
+import { IconButton } from "@mui/material";
+import { useRouter } from "next/router";
 import { useState } from "react";
+import { VscLoading, VscRepoFetch } from "react-icons/vsc";
 
 export function FetchButton() {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useLoading();
     const [hasModel, setHasModel] = useState();
-    console.log(hasModel);
+    const router = useRouter()
     const fetchModel = async () => {
           try {
             setLoading(true);
@@ -13,7 +17,7 @@ export function FetchButton() {
             const data = await response.json();
             setLoading(false);
             setHasModel(data);
-            
+            router.push(router.asPath)
           } catch (error) {
             console.error("Error fetching data:", error);
           }
@@ -23,8 +27,9 @@ export function FetchButton() {
 
     
     return (
-        <button onClick={fetchModel} disabled={loading}>
-            {loading ? "Fetching..." : "Fetch Data"}
-        </button>
+        <>
+            {loading  ? <VscLoading /> : <VscRepoFetch />}
+            </>
+   
     );
   }

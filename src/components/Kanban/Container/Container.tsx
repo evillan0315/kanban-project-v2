@@ -4,17 +4,16 @@ import classNames from "classnames";
 import Box from "@mui/material/Box";
 
 import { Header, StyledContainer } from "./Container.module";
-import { Add, Delete, DragHandle } from "@mui/icons-material";
+import { DragHandle } from "@mui/icons-material";
 
 import {
-  Button,
   Card,
   CardActions,
   CardContent,
   IconButton,
   Typography,
 } from "@mui/material";
-import { useTaskData } from "@/hooks/useTaskData";
+import useTaskData from "@/hooks/useTaskData";
 
 export interface Props {
   children: React.ReactNode;
@@ -41,7 +40,7 @@ export const Container = forwardRef<HTMLDivElement, Props>(
       horizontal,
       hover,
       onClick,
-      onRemove,
+
       label,
       placeholder,
       style,
@@ -53,10 +52,7 @@ export const Container = forwardRef<HTMLDivElement, Props>(
     ref
   ) => {
     const { findStatusById } = useTaskData();
-    const handleCreateItem = () => {
-      console.log("handle create item");
-    };
-
+    console.log(findStatusById(label as string), 'label');
     return (
       <Box
         {...props}
@@ -70,7 +66,6 @@ export const Container = forwardRef<HTMLDivElement, Props>(
           minWidth: 350,
           minHeight: 450,
           fontSize: ".9rem",
-
         }}
         style={
           {
@@ -90,16 +85,19 @@ export const Container = forwardRef<HTMLDivElement, Props>(
         onClick={onClick}
         tabIndex={onClick ? 0 : undefined}
       >
-        <Card variant="outlined" sx={{
-                      margin:1,
-          height: "100%",
-          "& .MuiPaper-root": {
-            display: "flex",
-            flexDirection: "column",
+        <Card
+          variant="outlined"
+          sx={{
+            margin: 1,
+            height: "100%",
+            "& .MuiPaper-root": {
+              display: "flex",
+              flexDirection: "column",
 
-            height: "90vh",
-          },
-        }}>
+              height: "90vh",
+            },
+          }}
+        >
           {label ? (
             <>
               <Header>
@@ -107,10 +105,6 @@ export const Container = forwardRef<HTMLDivElement, Props>(
                   {findStatusById(label)?.name || "Header"}
                 </Typography>
                 <CardActions>
-                  <IconButton size={"small"} color="error" onClick={onRemove}>
-                    <Delete />
-                  </IconButton>
-
                   <Box {...handleProps}>
                     {" "}
                     <IconButton size={"small"}>
@@ -122,14 +116,17 @@ export const Container = forwardRef<HTMLDivElement, Props>(
             </>
           ) : null}
 
-          <CardContent sx={{p:1, flex: 1, height: "50vh", maxHeight: 440, overflow:"auto"}}>
+          <CardContent
+            sx={{
+              p: 1,
+              flex: 1,
+              height: "50vh",
+              maxHeight: 440,
+              overflow: "auto",
+            }}
+          >
             {placeholder ? children : <ul>{children}</ul>}
           </CardContent>
-          <CardActions sx={{ p: 1 }}>
-          <Button fullWidth startIcon={<Add />} onClick={handleCreateItem}>
-            Create Item
-          </Button>
-          </CardActions>
         </Card>
       </Box>
     );

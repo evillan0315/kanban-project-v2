@@ -39,7 +39,9 @@
     "motion": "^12.4.1",
     "next": "^15",
     "next-auth": "^4.24.11",
+    "notistack": "^3.0.2",
     "react": "^19.0.0",
+    "react-ace": "^14.0.1",
     "react-color": "^2.19.3",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
@@ -52,7 +54,8 @@
     "styled-components": "^6.1.15",
     "tailwind-merge": "^3.0.1",
     "util": "^0.12.5",
-    "yup": "^1.6.1"
+    "yup": "^1.6.1",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -63,6 +66,7 @@
     "@types/react-color": "^3.0.13",
     "@types/react-dom": "^19.0.0",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "@types/uuid": "^10.0.0",
     "eslint": "^8",
     "eslint-config-next": "^15",
     "eslint-config-prettier": "^10.0.1",

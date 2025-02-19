@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { createPortal, unstable_batchedUpdates } from "react-dom";
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {createPortal, unstable_batchedUpdates} from 'react-dom';
+import { v4 as uuidv4 } from "uuid";
 import {
   CancelDrop,
   closestCenter,
@@ -22,7 +22,7 @@ import {
   MeasuringStrategy,
   KeyboardCoordinateGetter,
   defaultDropAnimationSideEffects,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   AnimateLayoutChanges,
   SortableContext,
@@ -32,24 +32,24 @@ import {
   verticalListSortingStrategy,
   SortingStrategy,
   horizontalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+} from '@dnd-kit/sortable';
+import {CSS} from '@dnd-kit/utilities';
+import {icoordinateGetter as multipleContainersCoordinateGetter} from './multipleContainersKeyboardCoordinates';
 
-import { Container, ContainerProps } from "@/components/Kanban/Container";
-import { Item } from "@/components/Kanban/Item";
-//import {createRange} from '@/components/Kanban/utilities';
-import { icoordinateGetter } from "./multipleContainersKeyboardCoordinates";
-import { Button } from "@mui/material";
-import { Add } from "@mui/icons-material";
-import { useTaskData } from "@/hooks/useTaskData";
+import {Container, ContainerProps} from './Container';
+import {Item, } from './Item';
+
+import useTaskStore from '@/hooks/useTaskStore';
+import { createTaskRange } from './utilities/createRange';
+import useTaskData from '@/hooks/useTaskData';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  title: "Presets/Sortable/Multiple Containers",
+  title: 'Presets/Sortable/Multiple Containers',
 };
 
 const animateLayoutChanges: AnimateLayoutChanges = (args) =>
-  defaultAnimateLayoutChanges({ ...args, wasDragging: true });
+  defaultAnimateLayoutChanges({...args, wasDragging: true});
 
 function DroppableContainer({
   children,
@@ -77,13 +77,13 @@ function DroppableContainer({
   } = useSortable({
     id,
     data: {
-      type: "container",
+      type: 'container',
       children: items,
     },
     animateLayoutChanges,
   });
   const isOverContainer = over
-    ? (id === over.id && active?.data.current?.type !== "container") ||
+    ? (id === over.id && active?.data.current?.type !== 'container') ||
       items.includes(over.id)
     : false;
 
@@ -113,13 +113,13 @@ const dropAnimation: DropAnimation = {
   sideEffects: defaultDropAnimationSideEffects({
     styles: {
       active: {
-        opacity: "0.5",
+        opacity: '0.5',
       },
     },
   }),
 };
 
-type Items = Record<string, Task[]>;
+type Items = Record<UniqueIdentifier, UniqueIdentifier[]>;
 
 interface Props {
   adjustScale?: boolean;
@@ -136,7 +136,7 @@ interface Props {
     isSorting: boolean;
     isDragOverlay: boolean;
   }): React.CSSProperties;
-  wrapperStyle?(args: { index: number }): React.CSSProperties;
+  wrapperStyle?(args: {index: number}): React.CSSProperties;
   itemCount?: number;
   items?: Items;
   handle?: boolean;
@@ -149,74 +149,52 @@ interface Props {
   vertical?: boolean;
 }
 
-export const TRASH_ID = "void";
-const PLACEHOLDER_ID = "placeholder";
+export const TRASH_ID = 'void';
+const PLACEHOLDER_ID = 'placeholder';
 const empty: UniqueIdentifier[] = [];
 
-interface Task {
-  id: string;
-  name: string;
-  statusId: string; // Matches `slug` from Status API
-}
-
-/* const fetchStatuses = async (): Promise<Status[]> => {
-  const response = await fetch("/api/status");
-  return response.json();
-};
-
-const fetchTasks = async (): Promise<Task[]> => {
-  const response = await fetch("/api/task");
-  return response.json();
-}; */
 export function MultipleContainers({
   adjustScale = false,
-  //itemCount = 3,
+  itemCount = 3,
   cancelDrop,
   columns,
   handle = false,
-  //items,
+  items: initialItems,
   containerStyle,
-  coordinateGetter = icoordinateGetter,
+  coordinateGetter = multipleContainersCoordinateGetter,
   getItemStyles = () => ({}),
   wrapperStyle = () => ({}),
   minimal = false,
   modifiers,
   renderItem,
   strategy = verticalListSortingStrategy,
-  trashable = true,
+  trashable = false,
   vertical = false,
   scrollable,
 }: Props) {
-  const { items, containers, setContainers, setItems, findTaskById, getColor } =
-    useTaskData();
-   
+  const {loadItems,items, setItems} =useTaskData()
+  // const [items, setItems] = useState<Items>(() => {
+  //   return initialItems ?? Object.fromEntries(
+  //     Array.from({ length: 4 }, () => {
+  //       const containerId = uuidv4(); // Generate a unique container ID
+  //       return [
+  //         containerId,
+  //         createTaskRange(itemCount, () => ({ id: uuidv4() })).map((task) => task.id),
+  //       ];
+  //     })
+  //   );
+  // });
+  
+  const [containers, setContainers] = useState(
+    Object.keys(items) as UniqueIdentifier[]
+  );
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const lastOverId = useRef<UniqueIdentifier | null>(null);
   const recentlyMovedToNewContainer = useRef(false);
-  const isSortingContainer =
-    activeId != null ? containers.includes(activeId) : false;
-
-  /* useEffect(() => {
-      const fetchData = async () => {
-        const statusList = await fetchStatuses();
-        const taskList = Array.isArray(await fetchTasks()) ? await fetchTasks() : [];
-        console.log(taskList,statusList)
-        // Group tasks by status.slug
-        const groupedTasks = statusList.reduce<Record<string, string[]>>((acc, stat) => {
-          acc[stat.id] =
-          taskList
-              .filter((task) => task.statusId === stat.id)
-              .map((task) => task.id) || [];
-          return acc;
-        }, {});
-        
-        setItems(groupedTasks);
-        setContainers(Object.keys(groupedTasks)); 
-        
-      };
   
-      fetchData();
-    }, []); */
+  const isSortingContainer =
+    activeId != null ? Object.keys(containers).includes(activeId as string) : false;
+
   /**
    * Custom collision detection strategy optimized for multiple containers
    *
@@ -225,6 +203,13 @@ export function MultipleContainers({
    * - If there are no intersecting containers, return the last matched intersection
    *
    */
+  useEffect(() => {
+    loadItems()
+    //fetchStatuses()
+    
+  }, [loadItems])
+  console.log(items, containers);
+  
   const collisionDetectionStrategy: CollisionDetection = useCallback(
     (args) => {
       if (activeId && activeId in items) {
@@ -243,7 +228,7 @@ export function MultipleContainers({
           ? // If there are droppables intersecting with the pointer, return those
             pointerIntersections
           : rectIntersection(args);
-      let overId = getFirstCollision(intersections, "id");
+      let overId = getFirstCollision(intersections, 'id');
 
       if (overId != null) {
         if (overId === TRASH_ID) {
@@ -271,7 +256,7 @@ export function MultipleContainers({
 
         lastOverId.current = overId;
 
-        return [{ id: overId }];
+        return [{id: overId}];
       }
 
       // When a draggable item moves to a new container, the layout may shift
@@ -283,11 +268,11 @@ export function MultipleContainers({
       }
 
       // If no droppable is matched, return the last match
-      return lastOverId.current ? [{ id: lastOverId.current }] : [];
+      return lastOverId.current ? [{id: lastOverId.current}] : [];
     },
     [activeId, items]
   );
-  const [clonedItems, setClonedItems] = useState<Items | null>({});
+  const [clonedItems, setClonedItems] = useState<Items | null>(null);
   const sensors = useSensors(
     useSensor(MouseSensor),
     useSensor(TouchSensor),
@@ -319,7 +304,7 @@ export function MultipleContainers({
     if (clonedItems) {
       // Reset items to their original state in case items have been
       // Dragged across containers
-      setItems(clonedItems as any);
+      setItems(clonedItems);
     }
 
     setActiveId(null);
@@ -331,22 +316,7 @@ export function MultipleContainers({
       recentlyMovedToNewContainer.current = false;
     });
   }, [items]);
-  const handleTaskpdate = async (newRow: Task, oldRow: Task) => {
-    try {
-      const response = await fetch(`/api/task`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newRow),
-      });
 
-      if (!response.ok) throw new Error("Failed to update");
-
-      return newRow; // ✅ MUI will update the UI with newRow
-    } catch (error) {
-      console.error("Update error:", error);
-      return oldRow; // ❌ Revert to old row if API update fails
-    }
-  };
   return (
     <DndContext
       sensors={sensors}
@@ -356,11 +326,11 @@ export function MultipleContainers({
           strategy: MeasuringStrategy.Always,
         },
       }}
-      onDragStart={({ active }) => {
+      onDragStart={({active}) => {
         setActiveId(active.id);
-        setClonedItems(items as any);
+        setClonedItems(items);
       }}
-      onDragOver={({ active, over }) => {
+      onDragOver={({active, over}) => {
         const overId = over?.id;
 
         if (overId == null || overId === TRASH_ID || active.id in items) {
@@ -391,19 +361,15 @@ export function MultipleContainers({
                 active.rect.current.translated &&
                 active.rect.current.translated.top >
                   over.rect.top + over.rect.height;
+
               const modifier = isBelowOverItem ? 1 : 0;
+
               newIndex =
                 overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
             }
-            recentlyMovedToNewContainer.current = true;
-            const currentActiveItem = findTaskById(active.id as string);
-            const currentItem = findTaskById(over?.id as string);
-            const newTskStat = {
-              ...currentActiveItem,
-              statusId: overContainer,
-            };
 
-            handleTaskpdate(newTskStat as Task, currentItem as Task);
+            recentlyMovedToNewContainer.current = true;
+
             return {
               ...items,
               [activeContainer]: items[activeContainer].filter(
@@ -421,7 +387,7 @@ export function MultipleContainers({
           });
         }
       }}
-      onDragEnd={({ active, over }) => {
+      onDragEnd={({active, over}) => {
         if (active.id in items && over?.id) {
           setContainers((containers) => {
             const activeIndex = containers.indexOf(active.id);
@@ -499,9 +465,10 @@ export function MultipleContainers({
     >
       <div
         style={{
-          display: "inline-grid",
-          boxSizing: "border-box",
-          gridAutoFlow: vertical ? "row" : "column",
+          display: 'inline-grid',
+          boxSizing: 'border-box',
+          padding: "5px 10px 15px 10px",
+          gridAutoFlow: vertical ? 'row' : 'column',
         }}
       >
         <SortableContext
@@ -549,14 +516,10 @@ export function MultipleContainers({
               id={PLACEHOLDER_ID}
               disabled={isSortingContainer}
               items={empty}
+              onClick={handleAddColumn}
               placeholder
             >
-              <Button
-                startIcon={<Add />}
-                onClick={() => handleAddColumn("status", undefined)}
-              >
-                Add Column
-              </Button>
+              + Add column
             </DroppableContainer>
           )}
         </SortableContext>
@@ -591,8 +554,8 @@ export function MultipleContainers({
           isDragging: true,
           isDragOverlay: true,
         })}
-        color={getColor(id as string)}
-        wrapperStyle={wrapperStyle({ index: 0 })}
+        color={getColor(id)}
+        wrapperStyle={wrapperStyle({index: 0})}
         renderItem={renderItem}
         dragOverlay
       />
@@ -605,7 +568,7 @@ export function MultipleContainers({
         label={`${containerId}`}
         columns={columns}
         style={{
-          height: "100%",
+          height: '100%',
         }}
         shadow
         unstyled={false}
@@ -625,7 +588,7 @@ export function MultipleContainers({
               isDragOverlay: false,
             })}
             color={getColor(item)}
-            wrapperStyle={wrapperStyle({ index })}
+            wrapperStyle={wrapperStyle({index})}
             renderItem={renderItem}
           />
         ))}
@@ -639,8 +602,7 @@ export function MultipleContainers({
     );
   }
 
-  function handleAddColumn(model: string, params: any) {
-    console.log(model, params);
+  function handleAddColumn() {
     const newContainerId = getNextContainerId();
 
     unstable_batchedUpdates(() => {
@@ -660,10 +622,23 @@ export function MultipleContainers({
   }
 }
 
+function getColor(id: UniqueIdentifier) {
+  switch (String(id)[0]) {
+    case 'A':
+      return '#7193f1';
+    case 'B':
+      return '#ffda6c';
+    case 'C':
+      return '#00bcd4';
+    case 'D':
+      return '#ef769f';
+  }
 
+  return undefined;
+}
 
-function Trash({ id }: { id: UniqueIdentifier }) {
-  const { setNodeRef, isOver } = useDroppable({
+function Trash({id}: {id: UniqueIdentifier}) {
+  const {setNodeRef, isOver} = useDroppable({
     id,
   });
 
@@ -671,17 +646,18 @@ function Trash({ id }: { id: UniqueIdentifier }) {
     <div
       ref={setNodeRef}
       style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        left: "50%",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'fixed',
+        left: '50%',
         marginLeft: -150,
         bottom: 20,
         width: 300,
         height: 60,
         borderRadius: 5,
-        border: "1px solid",
-        borderColor: isOver ? "red" : "#DDD",
+        border: '1px solid',
+        borderColor: isOver ? 'red' : '#DDD',
       }}
     >
       Drop here to delete
@@ -698,7 +674,7 @@ interface SortableItemProps {
   style(args: any): React.CSSProperties;
   getIndex(id: UniqueIdentifier): number;
   renderItem(): React.ReactElement;
-  wrapperStyle({ index }: { index: number }): React.CSSProperties;
+  wrapperStyle({index}: {index: number}): React.CSSProperties;
 }
 
 function SortableItem({
@@ -727,7 +703,7 @@ function SortableItem({
   });
   const mounted = useMountStatus();
   const mountedWhileDragging = isDragging && !mounted;
-  const {getColor} = useTaskData()
+
   return (
     <Item
       ref={disabled ? undefined : setNodeRef}
@@ -735,9 +711,9 @@ function SortableItem({
       dragging={isDragging}
       sorting={isSorting}
       handle={handle}
-      handleProps={handle ? { ref: setActivatorNodeRef } : undefined}
+      handleProps={handle ? {ref: setActivatorNodeRef} : undefined}
       index={index}
-      wrapperStyle={wrapperStyle({ index })}
+      wrapperStyle={wrapperStyle({index})}
       style={style({
         index,
         value: id,

@@ -1,0 +1,220 @@
+{
+    "layout": {
+      "type": "Grid",
+      "props": {
+        "container": true,
+        "spacing": 2,
+        "alignItems": "space-between",
+        "alignContent": "center",
+        "useFlexGap":true,
+        "sx": {
+          
+        },
+        "direction": "row"
+      },
+      "children": [
+        {
+          "type": "Grid",
+          "props": {
+            "size": 4
+          },
+          "children": [
+            {
+              "type": "Card",
+              "props": {
+                "variant": "outlined"
+              },
+              "children": [
+                {
+                  "type": "CardContent",
+                  "props": {
+                    "border":"1px solid"
+                  },
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "props": {
+                        "variant": "h2",
+                        "gutterBottom": true,
+                        "children": "Eddie R. Villanueva"
+                      }
+                    },
+                    {
+                      "type": "Typography",
+                      "props": {
+                        "variant": "h5",
+                        "color": "text.secondary",
+                        "children": "Software Engineer | Technology Consultant"
+                      }
+                    },
+                    {
+                      "type": "Typography",
+                      "props": {
+                        "variant": "body1",
+                        "children": "Experienced software engineer and DevOps specialist with over 12 years in software development and consulting..."
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Grid",
+          "props": {
+            "size": 4
+          },
+          "children": [
+            {
+              "type": "Card",
+              "props": {
+
+                
+              },
+              "children": [
+                {
+                  "type": "CardContent",
+                  "props": {
+                    "sx": {
+                      "border":"1px solid"
+                    }
+                  },
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "props": {
+                        "variant": "h4",
+                        "gutterBottom": true,
+                        "children": "Skills"
+                      }
+                      
+                    },
+                    {
+                      "type": "Stack",
+                      "props": {
+                        "direction": "row",
+                        "spacing": 2,
+                        "useFlexGap": true,
+                        "flexWrap": "wrap"
+                      },
+                      "children": [
+                        {
+                          "type": "Box",
+                          "props": {
+                            "sx": {
+                              "padding": 2,
+                              "border": "1px solid",
+                              "borderColor": "divider",
+                              "borderRadius": 1
+                    
+                            },
+                                      "children": "AWS"
+                          }
+                        },
+                        {
+                          "type": "Box",
+                          "props": {
+                            "sx": {
+                              "padding": 2,
+                              "border": "1px solid",
+                              "borderColor": "divider",
+                              "borderRadius": 1
+                            },
+                            "children": "Google Cloud"
+                          }
+                        }
+
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Grid",
+          "props": {
+            "size": 4
+          },
+          "children": [
+            {
+              "type": "Card",
+              "props": {
+                "variant": "outlined"
+              },
+              "children": [
+                {
+                  "type": "CardContent",
+                  "props": {},
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "props": {
+                        "variant": "h4",
+                        "component": "div",
+                        "gutterBottom": true,
+                        "children": "Projects"
+                      }
+                    },
+                    {
+                      "type": "Grid",
+                      "props": {
+                        "container": true,
+                        "spacing": 2
+                      },
+                      "children": [
+                        {
+                          "type": "Grid",
+                          "props": {
+                            "item": true,
+                            "xs": 12,
+                            "sm": 6,
+                            "md": 4
+                          },
+                          "children": [
+                            {
+                              "type": "Card",
+                              "props": {},
+                              "children": [
+                                {
+                                  "type": "CardContent",
+                                  "props": {},
+                                  "children": [
+                                    {
+                                      "type": "Typography",
+                                      "props": {
+                                        "variant": "h6",
+                                        "component": "div",
+                                        "children": "E-Commerce Dashboard"
+                                      }
+                                    },
+                                    {
+                                      "type": "Typography",
+                                      "props": {
+                                        "variant": "body2",
+                                        "color": "text.secondary",
+                                        "children": "Built a comprehensive e-commerce management tool with Angular..."
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+         
+                        
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+  

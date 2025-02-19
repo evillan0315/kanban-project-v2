@@ -1,14 +1,41 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import classNames from "classnames";
-import type { DraggableSyntheticListeners } from "@dnd-kit/core";
+import type {
+  DraggableSyntheticListeners,
+  UniqueIdentifier,
+} from "@dnd-kit/core";
 import type { Transform } from "@dnd-kit/utilities";
 
-import { Handle, Remove } from "./components";
+import { Remove } from "./components";
 
-import styles from "./Item.module.scss";
-import { useTaskData } from "@/hooks/useTaskData";
-import { Chip } from "@mui/material";
+//import styles from "./Item.module.scss";
+import  useTaskData  from "@/hooks/useTaskData";
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
 
+  CardContent,
+  Chip,
+
+  Stack,
+  Typography,
+} from "@mui/material";
+
+import dayjs from "dayjs";
+import "dayjs/locale/en"; // Import the locale (e.g., English)
+import relativeTime from "dayjs/plugin/relativeTime"; // Example plugin
+import updateLocale from "dayjs/plugin/updateLocale"; // For custom locale updates
+import { Task } from "@prisma/client";
+import DialogDynamicForm from "@/components/Form/DialogDynamicForm";
+
+// Optional: Configure locale globally (do this once, maybe in _app.tsx)
+dayjs.locale("en"); // Set default locale.  Good for consistency.
+
+// Optional: Extend Day.js with plugins (do this once, maybe in _app.tsx)
+dayjs.extend(relativeTime);
+dayjs.extend(updateLocale);
 export interface Props {
   dragOverlay?: boolean;
   color?: string;
@@ -27,7 +54,8 @@ export interface Props {
   transition?: string | null;
   wrapperStyle?: React.CSSProperties;
   value: React.ReactNode;
-  onRemove?(): void;
+  onRemove?: ()=>void;
+ 
   renderItem?(args: {
     dragOverlay: boolean;
     dragging: boolean;
@@ -53,7 +81,7 @@ export const Item = React.memo(
         disabled,
         fadeIn,
         handle,
-        handleProps,
+
         //height,
         index,
         listeners,
@@ -69,19 +97,30 @@ export const Item = React.memo(
       },
       ref
     ) => {
-      const { findStatusById, findTaskById } = useTaskData();
+      const { findPriorityById, findTaskById, getColor } = useTaskData();
+      handle= true;
+      const [open, setOpen] = useState(false);
       useEffect(() => {
         if (!dragOverlay) {
           return;
         }
-
+        
         document.body.style.cursor = "grabbing";
 
         return () => {
           document.body.style.cursor = "";
         };
-      }, [dragOverlay]);
+      }, [dragOverlay, value, findTaskById]);
       const task = findTaskById(value as string);
+      const openDynamicForm = (task: Task) => {
+        console.log(task, 'tsk openDynamicForm')
+
+        setOpen(true)
+      }
+      const handleOnSubmit = (task: Task) => {
+        
+        console.log(task, 'tsk handleonsubmit')
+      }
       return renderItem ? (
         renderItem({
           dragOverlay: Boolean(dragOverlay),
@@ -97,16 +136,14 @@ export const Item = React.memo(
           value,
         })
       ) : (
-        <li
-          className={classNames(
-            styles.Wrapper,
-            fadeIn && styles.fadeIn,
-            sorting && styles.sorting,
-            dragOverlay && styles.dragOverlay
-          )}
+        <Box
+          gap={2}
+          sx={{
+            overflow: "hidden",
+          }}
+          className={classNames(fadeIn, sorting, dragOverlay)}
           style={
             {
-              ...wrapperStyle,
               transition: [transition, wrapperStyle?.transition]
                 .filter(Boolean)
                 .join(", "),
@@ -128,34 +165,84 @@ export const Item = React.memo(
           }
           ref={ref}
         >
-          <div
+          <Card
+            variant="elevation"
+            sx={{
+              padding: 0,
+              maxHeight: 90,
+              marginBottom: 1,
+              position: "relative",
+            }}
             className={classNames(
-              styles.Item,
-              dragging && styles.dragging,
-              handle && styles.withHandle,
-              dragOverlay && styles.dragOverlay,
-              disabled && styles.disabled,
-              color && styles.color
+              `shadow-lg border border-neutral-800`,
+              dragging,
+              handle,
+              dragOverlay,
+              disabled
             )}
-            style={style}
             data-cypress="draggable-item"
             {...(!handle ? listeners : undefined)}
             {...props}
             tabIndex={!handle ? 0 : undefined}
           >
-            {task?.name}
-            <Chip
-              size={"small"}
-              label={findStatusById(task?.statusId as string)?.name}
-            />
-            <span className={styles.Actions}>
-              {onRemove ? (
-                <Remove className={styles.Remove} onClick={onRemove} />
-              ) : null}
-              {handle ? <Handle {...handleProps} {...listeners} /> : null}
-            </span>
-          </div>
-        </li>
+            <CardContent
+              sx={{
+                paddingX: 1,
+                paddingY: 3,
+                flex: 1,
+                borderLeft: 3,
+                borderColor: getColor(task?.id as UniqueIdentifier),
+              }}
+            >
+              <Stack
+                width="100%"
+                direction="row"
+                spacing={1}
+               
+               
+                alignContent={"space-between"}
+                alignItems={"center"}
+              >
+                
+                <Box sx={{ position: "absolute", right: 1, marginTop: 6, width:50, height:50 }}>
+                  
+                </Box>
+                <Box sx={{ position: "absolute", top: 1, width: "100%" }}>
+                  <Typography
+                    variant="caption"
+                    className="text-right"
+                    fontSize={10}
+                  >
+                    started {dayjs(task?.startDate).fromNow()}
+                  </Typography>
+                </Box>
+                <Box sx={{ position: "absolute", right: 1, top: 0 }}>
+                  <Remove className={""} onClick={onRemove} />
+                </Box>
+                <Avatar sx={{ width: 20, height: 20 }}  onClick={()=>openDynamicForm(task as Task)}></Avatar> 
+                <Typography component={"button"} variant="caption" className="mt-2"> 
+                <Button variant="text" onClick={()=>openDynamicForm(task as Task)}>{task?.name} </Button>
+                </Typography>
+                
+              </Stack>
+              <Chip
+                size={"small"}
+                variant="outlined"
+                label={
+                  findPriorityById(task?.priorityId as string)?.name || "draft"
+                }
+              />
+            </CardContent>
+            <Box sx={{ position: "absolute", bottom: 1, right: 1 }}>
+              <Typography color={"error"} variant="caption" fontSize={10}>
+                due {dayjs(task?.dueDate).fromNow()}
+              </Typography>
+            </Box>
+          </Card>
+
+
+           <DialogDynamicForm  data={task} model={'task'} selectedStatus={undefined} open={open} onClose={()=>setOpen(false)} handleOnSubmit={handleOnSubmit} />
+        </Box>
       );
     }
   )

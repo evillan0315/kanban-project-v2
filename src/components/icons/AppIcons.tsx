@@ -13,6 +13,8 @@ import {
 } from "react-icons/di";
 import {
   BiAddToQueue,
+  BiBook,
+  BiCalculator,
   BiGlobe,
   BiImage,
   BiRestaurant,
@@ -20,6 +22,7 @@ import {
   BiSolidBookContent,
   BiSolidBusiness,
   BiSolidPhotoAlbum,
+  BiTerminal,
 } from "react-icons/bi";
 import {
   BsBoxes,
@@ -76,6 +79,7 @@ import {
   LuFileClock,
   LuFolderClock,
   LuLayoutGrid,
+  LuListTree,
   LuRefreshCw,
 } from "react-icons/lu";
 import {
@@ -114,6 +118,7 @@ import {
   MdOutlineScreenSearchDesktop,
   MdOutlineVideoLibrary,
   MdOutlineWeb,
+  MdPriorityHigh,
   MdSupport,
   MdSwitchAccessShortcutAdd,
   MdVideocam,
@@ -147,6 +152,7 @@ import {
   TbBrandPrisma,
   TbCircleDotFilled,
   TbCircleLetterC,
+  TbColorPicker,
   TbCurrencyAfghani,
   TbCurrencyBahraini,
   TbCurrencyBitcoin,
@@ -171,6 +177,7 @@ import {
   TbRobot,
   TbServer2,
   TbSquareLetterB,
+  TbStatusChange,
   TbToml,
   TbTools,
 } from "react-icons/tb";
@@ -352,15 +359,25 @@ import {
   SiTypescript,
   SiWebrtc,
 } from "react-icons/si";
-import { FaAngular } from "react-icons/fa";
+import { FaAngular, FaTasks } from "react-icons/fa";
+
 
 const AppIcons: { [key: string]: IconType } = {
+  task: FaTasks,
+  item: LuListTree,
+  color: TbColorPicker,
+  book: BiBook,
+  calculator: BiCalculator,
+  terminal: BiTerminal,
+  file: BsFillBoxFill,
+  priority: MdPriorityHigh,
+  status: TbStatusChange,
   fileDownArrow: MdOutlineKeyboardArrowDown,
   fileRightArrow: MdOutlineKeyboardArrowRight,
   fileItem: BsFillFileEarmarkFill,
   folderClose: FaFolder,
   folderOpen: FaFolderOpen,
-  terminal: BsTerminalFill,
+  terminalBS: BsTerminalFill,
   error: MdErrorOutline,
   moduleOptions: RiListSettingsFill,
   appSettings: MdAppRegistration,

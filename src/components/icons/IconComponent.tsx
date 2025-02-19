@@ -3,6 +3,8 @@
 import { IconType } from 'react-icons';
 import { FaBan } from 'react-icons/fa6';
 import AppIcons from './AppIcons';
+import Box from '@mui/material/Box';
+
 
 interface IconComponentProps {
 	iconName?: string;
@@ -34,19 +36,19 @@ const IconComponent: React.FC<IconComponentProps> = ({
 	return (
 		<>
 			{Icon && !CustomIcon && (
-				<div className={class_name}>
+				<Box className={`hover:backdrop-grayscale text-left `}>
 					<Icon size={size} color={color} />
-				</div>
+				</Box>
 			)}
 			{CustomIcon && (
-				<div className={class_name}>
+				<Box className={class_name}>
 					<CustomIcon size={size} color={color} />
-				</div>
+				</Box>
 			)}
 			{!Icon && (
-				<div className="text-neutral-400 text-center block mx-auto mb-1">
+				<Box className="text-neutral-400 text-center block mx-auto mb-1">
 					<FaBan size={size} />
-				</div>
+				</Box>
 			)}
 		</>
 	);

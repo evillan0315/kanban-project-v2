@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
+import Grid from "@mui/material/Grid2";
 
 
 interface DialogDynamicFormProps {
@@ -18,6 +19,7 @@ interface DialogDynamicFormProps {
   onClose: () => void;
   handleOnSubmit: (data: any) => void;
   selectedStatus?: string;
+  data?: any;
 }
 
 export default function DialogDynamicForm({
@@ -25,7 +27,8 @@ export default function DialogDynamicForm({
   open,
   onClose,
   handleOnSubmit,
-  selectedStatus
+  selectedStatus,
+  data
 }: DialogDynamicFormProps) {
   // const { loading, setLoading } = useLoading();
   const dialogVariants = {
@@ -49,7 +52,7 @@ console.log(selectedStatus, 'selectedStatus');
           "& .MuiPaper-root": {
             display: "flex",
             flexDirection: "column",
-            background: "#0000009",
+            background: "#0000006",
             height: "100vh",
           },
         }}
@@ -71,12 +74,15 @@ console.log(selectedStatus, 'selectedStatus');
         </DialogTitle>
 
         <DynamicForm
+         data={data}
           model={model}
           handleOnSubmit={handleOnSubmit}
           open={open}
           onClose={onClose}
           selectedStatus={selectedStatus}
         />
+      
+
       </Dialog>
     </motion.div>
   );

@@ -169,3 +169,24 @@ model Documentation {
   name    String
   content String?
 }
+
+model Page {
+  id      String  @id @default(uuid())
+  title   String?
+  content String?
+  props   Json?
+}
+
+model Post {
+  id      String  @id @default(uuid())
+  name    String?
+  content String?
+  props   Json?
+}
+
+model Component {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+  props       Json?
+}

@@ -1,13 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "client";
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-
-  Stack,
-
-} from "@mui/material";
+import { Box,  IconButton, Paper, Stack } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
@@ -15,13 +9,13 @@ import {
   GridRowSelectionModel,
 } from "@mui/x-data-grid";
 
-
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { useLoading } from "@/hooks/useLoading";
-
 import DialogDynamicForm from "@/components/Form/DialogDynamicForm";
-
-import { FetchButton } from "@/components/FetchSwingers";
+//import { FetchButton } from "@/components/FetchSwingers";
+import { useRouter } from "next/router"; 
+//import DynamicBreadcrumbs from "@/components/Page/DynamicBreadcrumbs";
+import { Add, Delete } from "@mui/icons-material";
 /* 
 interface ProjectFormData {
   id: number;
@@ -57,6 +51,8 @@ const ModelPage: React.FC<ModelPageProps> = ({ model, fields }) => {
   >([]);
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  //const {fetchTasks,items, setItems} =useTaskStore()
+  const router = useRouter(); 
   // Fetch data
   useEffect(() => {
     const fetchModel = async () => {
@@ -71,7 +67,7 @@ const ModelPage: React.FC<ModelPageProps> = ({ model, fields }) => {
         // Dynamically generate columns from data keys
         if (data.length > 0) {
           const generatedColumns: GridColDef[] = Object.keys(data[0])
-          //  .filter((key) => !hideFields.includes(key)) // ✅ Exclude hidden fields
+            //  .filter((key) => !hideFields.includes(key)) // ✅ Exclude hidden fields
             .map((key) => ({
               field: key,
               headerName: key.charAt(0).toUpperCase() + key.slice(1),
@@ -87,6 +83,13 @@ const ModelPage: React.FC<ModelPageProps> = ({ model, fields }) => {
 
     fetchModel();
   }, [model, setLoading, isSubmitted]);
+  const handleRowClick = (params: any) => {
+    console.log(params, model);
+    // You can use params.row to get the clicked row's data
+    const id = params.row.id;
+
+    router.push(`/${model}/${id}`); // Redirect to the task detail page using Next.js router
+  };
   const handleRowUpdate = async (
     newRow: GridRowModel,
     oldRow: GridRowModel
@@ -99,7 +102,7 @@ const ModelPage: React.FC<ModelPageProps> = ({ model, fields }) => {
       });
 
       if (!response.ok) throw new Error("Failed to update");
-
+      router.push(router.asPath)
       return newRow; // ✅ MUI will update the UI with newRow
     } catch (error) {
       console.error("Update error:", error);
@@ -121,6 +124,7 @@ const ModelPage: React.FC<ModelPageProps> = ({ model, fields }) => {
       setHasModel((prevRows: typeof hasModel) =>
         prevRows.filter((row) => !selectedIds.includes(row.id))
       );
+      router.push(router.asPath)
     } catch (error) {
       console.error("Delete error:", error);
     }
@@ -129,10 +133,11 @@ const ModelPage: React.FC<ModelPageProps> = ({ model, fields }) => {
   //   const newRow = { name: "", description: "", id: Date.now().toString() }; // Example default values
   //   setHasModel((prevRows) => [...prevRows, newRow]);
   // };
-  
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleOnSubmit = (data: any) => {
     console.log(data, "handleOnSubmit");
+    router.push(router.asPath)
     setIsSubmitted(true);
   };
   const handleSelectionChange = (ids: GridRowSelectionModel) => {
@@ -168,6 +173,7 @@ const ModelPage: React.FC<ModelPageProps> = ({ model, fields }) => {
 
   return (
     <>
+
       <Box component="div">
         <Box
           display="flex"
@@ -178,34 +184,37 @@ const ModelPage: React.FC<ModelPageProps> = ({ model, fields }) => {
           <Stack direction={"row"} spacing={2}></Stack>
           <Stack direction={"row"} spacing={2}>
             {fields && (
-              <Button
-                variant="contained"
+              <IconButton
+       
                 color="primary"
                 onClick={() => setOpen(true)}
                 sx={{}}
               >
-                Create {model}
-              </Button>
+                <Add />
+              </IconButton>
             )}
-            <Button
-              variant="contained"
-              color="error"
-              disabled={selectedRows.length === 0}
-              onClick={() => handleDelete(selectedRows)}
-            >
-              Delete Selected
-            </Button>
-            <FetchButton />
+           
+            <IconButton
+       
+                color="error"
+                disabled={selectedRows.length === 0}
+                onClick={() => handleDelete(selectedRows)}
+                sx={{}}
+              >
+                <Delete />
+              </IconButton>
+         
           </Stack>
         </Box>
 
-        <Box style={{ height: 400, width: "100%" }}>
+        <Paper style={{ height: 400, width: "100%" }}>
           <DataGrid
             loading={loading}
             rows={hasModel}
             columns={columns}
             pageSizeOptions={[5, 10]}
             checkboxSelection
+            onRowClick={handleRowClick} 
             onRowSelectionModelChange={handleSelectionChange}
             processRowUpdate={handleRowUpdate}
             // processRowUpdate={(updatedRow) => {
@@ -214,9 +223,14 @@ const ModelPage: React.FC<ModelPageProps> = ({ model, fields }) => {
             // }}
             onProcessRowUpdateError={(error) => console.error(error)}
           />
-        </Box>
+        </Paper>
       </Box>
-      <DialogDynamicForm model={model} open={open} onClose={()=>setOpen(false) } handleOnSubmit={handleOnSubmit} />
+      <DialogDynamicForm
+        model={model}
+        open={open}
+        onClose={() => setOpen(false)}
+        handleOnSubmit={handleOnSubmit}
+      />
     </>
   );
 };

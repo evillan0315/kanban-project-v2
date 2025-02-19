@@ -1,16 +1,13 @@
-'use client'
-import React  from "react";
+import React from 'react';
+import RenderComponent from '@/components/Layout/RenderComponent';
+import layoutSchema from '@/components/Layout/JSON_Schema/layoutSchema.json'; // Import your JSON schema
 
-import Box from "@mui/material/Box";
-
-
-export default function Dashboard() {
+const HomePage: React.FC = () => {
   return (
-    <Box sx={{ }}>
-      
-   
-     
-    </Box>
+    <div>
+      <RenderComponent component={layoutSchema.layout} />
+    </div>
   );
-}
-Dashboard.requireAuth = true;
+};
+
+export default HomePage;

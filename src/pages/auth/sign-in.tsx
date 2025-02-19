@@ -69,13 +69,12 @@ export default function SignIn({
   );
 }
 
-SignIn.getLayout = (page: React.ReactNode) => page;
 SignIn.requireAuth = false;
 
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions);
-  console.log(session);
+
   // If the user is already logged in, redirect.
   // Note: Make sure not to redirect to the same page
   // To avoid an infinite loop!
