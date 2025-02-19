@@ -14,6 +14,8 @@ import {
   DialogActions,
   Button,
   Paper,
+  Typography,
+  Card,
 
   //OutlinedInput,
   //Chip,
@@ -32,9 +34,10 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 
 import "dayjs/locale/en";
-import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import AceCodeEditor from "../AceEditor";
+import { RenderComponent } from "../Layout/RenderComponent";
+import CodeDisplay from "../CodeDisplay";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -80,7 +83,6 @@ const DynamicForm = ({
   const [options, setOptions] = useState<Field[]>([]);
   const [code, setCode] = useState<string>();
   const { loading, setLoading } = useLoading();
-  const router = useRouter()
   let method = "POST";
   if(data){
     method="PUT"
@@ -135,7 +137,7 @@ const DynamicForm = ({
       onClose();
       reset();
       enqueueSnackbar(`Submitted ${model} record`, {variant:'success'})
-      router.push(router.asPath)
+      //router.push(router.asPath)
     } catch (error) {
       enqueueSnackbar(`Error submitting form: ${error}`, {variant:'error'})
       console.error("Error submitting form:", error);
@@ -154,7 +156,7 @@ const DynamicForm = ({
             display: "flex",
             flexDirection: "column",
 
-            minHeight: 300,
+            minHeight: 200,
             overflow: "hidden",
             position: "relative",
           }}
@@ -166,12 +168,26 @@ const DynamicForm = ({
             sx={{
               gap: 2,
               alignItems: "space-between",
-              alignContent: "flex-start",
+              alignContent: "center",
             
               width: "100%",
             }}
           > 
-          <Grid size={5}>{JSON.stringify(code)}</Grid>
+          <Grid size={5}>
+            {code &&  (
+              <Box sx={{background: "rgba(0,0,0,0.2)", borderRadius: 2, maxHeight: 400, overflow: "auto"}}>
+                <RenderComponent component={JSON.parse(String(code))} />
+                
+                <Box sx={{p:1, mt:3}} className="hidden">
+                <Typography variant="body1">JSON</Typography>
+                  <CodeDisplay
+                  code={`${code}`}
+                  //handleChange={() => handleChange}
+                />
+                </Box>
+              </Box>
+            )}
+          </Grid>
           <Grid size={7} height={"100%"}>
 
           <Paper variant="outlined" sx={{padding:2}}>

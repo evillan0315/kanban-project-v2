@@ -1,5 +1,5 @@
 {
-    "layout": {
+
       "type": "Container",
       "props": {
         "maxWidth": "lg"
@@ -175,6 +175,6 @@
           ]
         }
       ]
-    }
-  }
+}
+
   

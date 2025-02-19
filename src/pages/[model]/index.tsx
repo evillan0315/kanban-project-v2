@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"client";
+
 import React, { useEffect, useState } from "react";
 import { Box,  IconButton, Paper, Stack } from "@mui/material";
 import {
@@ -16,6 +16,7 @@ import DialogDynamicForm from "@/components/Form/DialogDynamicForm";
 import { useRouter } from "next/router"; 
 //import DynamicBreadcrumbs from "@/components/Page/DynamicBreadcrumbs";
 import { Add, Delete } from "@mui/icons-material";
+import { enqueueSnackbar } from "notistack";
 /* 
 interface ProjectFormData {
   id: number;
@@ -102,7 +103,7 @@ const ModelPage: React.FC<ModelPageProps> = ({ model, fields }) => {
       });
 
       if (!response.ok) throw new Error("Failed to update");
-      router.push(router.asPath)
+      //router.push(router.asPath)
       return newRow; // ✅ MUI will update the UI with newRow
     } catch (error) {
       console.error("Update error:", error);
@@ -118,14 +119,16 @@ const ModelPage: React.FC<ModelPageProps> = ({ model, fields }) => {
         body: JSON.stringify({ ids: selectedIds }), // Send array of IDs
       });
 
-      if (!response.ok) throw new Error("Failed to delete");
+      if (!response.ok) enqueueSnackbar(`Failed to delete ${model} record`, {variant:'error'}); throw new Error("Failed to delete");
 
       // ✅ Explicitly type `prevRows` to avoid `never[]` issue
       setHasModel((prevRows: typeof hasModel) =>
         prevRows.filter((row) => !selectedIds.includes(row.id))
       );
+      enqueueSnackbar(`Deleted ${model} record`, {variant:'success'})
       router.push(router.asPath)
     } catch (error) {
+      enqueueSnackbar(`Error when deleting ${model}`, {variant:'error'});
       console.error("Delete error:", error);
     }
   };

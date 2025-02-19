@@ -16,7 +16,7 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ code }) => {
   }, [code]); // Re-highlight if the code changes
 
   return (
-    <pre data-line="" data-src="plugins/toolbar/prism-toolbar.js" className="language-markdown line-numbers " ref={codeRef}> {/* Important: language-typescript class */}
+    <pre data-line="" data-src="plugins/toolbar/prism-toolbar.js" className="language-markdown line-numbers" ref={codeRef}> {/* Important: language-typescript class */}
       <code className="language-typescript line-numbers rounded-lg bg-black"> {/* Important: language-typescript class */}
         {code}
       </code>

@@ -132,6 +132,7 @@ const MuiComponents: React.FC<MuiComponentsProps> = () => {
               sx={{ mr: 2 }}
             >
               {/* Add your icon here */}
+              
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               My App
